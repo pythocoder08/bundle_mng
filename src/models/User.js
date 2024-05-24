@@ -1,30 +1,3 @@
-// import connection from '../database/config'
-// import Sequelize from 'sequelize'
-
-// const User = connection.define(
-//   'User',
-//   {
-//     Customer_ID: {
-//       type: Sequelize.NUMBER,
-//       allowNull: false
-//     },
-//     email: {
-//       type: Sequelize.STRING,
-//       allowNull: false
-//     },
-//     Vendor: {
-//       type: Sequelize.BOOLEAN,
-//       allowNull: true
-//     }
-//   },
-//   {
-//     modelName: 'dbo.tblUser',
-//     timestamps: false
-//   }
-// )
-
-// export default User
-
 import Sequelize from 'sequelize'
 import connection from '../database/conn'
 

@@ -2,9 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import path from 'path'
-import helmet from 'helmet';
-import morgan from 'morgan';
-import compression from 'compression';
+import helmet from 'helmet'
+import morgan from 'morgan'
+import compression from 'compression'
 import * as Sentry from '@sentry/node'
 
 import config from './config/config.js'
