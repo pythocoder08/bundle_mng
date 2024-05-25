@@ -20,8 +20,6 @@ const { HOST, PORT } = config
 
 const app = express()
 
-app.use(express.json())
-
 connection
   .authenticate()
   .then(() => {
@@ -34,7 +32,18 @@ connection
 // This request handler must be the first middleware on the app
 app.use(Sentry.Handlers.requestHandler())
 
-app.use(cors())
+const corsOptions = {
+  credentials: true,
+  origin: (origin, callback) => {
+    // if (whitelist.indexOf(origin) !== -1) {
+    callback(null, true)
+    // } else {
+    //   callback(new Error("Not allowed by CORS"))
+    // }
+  }
+}
+
+app.use(cors(corsOptions))
 app.use(helmet())
 app.use(compression())
 app.use(morgan('----> :method :url :status'))

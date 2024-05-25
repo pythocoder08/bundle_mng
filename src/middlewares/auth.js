@@ -16,6 +16,8 @@ const auth =
       if (!authHeader.startsWith('Bearer ')) throw Boom.unauthorized('Invalid token format')
 
       const token = authHeader.split(' ')[1]
+      
+      if (!token) throw Boom.unauthorized('Empty tocken')
 
       const {
         user: { email }
@@ -29,7 +31,7 @@ const auth =
 
       next()
     } catch (err) {
-      next(err)
+      next(Boom.unauthorized('Permission denied'))
     }
   }
 
