@@ -11,7 +11,7 @@ function buildError(err) {
   if (err.isJoi) {
     return {
       code: HttpStatus.BAD_REQUEST,
-      message: HttpStatus.getStatusText(HttpStatus.BAD_REQUEST),
+      message: err.details[0].message || HttpStatus.getStatusText(HttpStatus.BAD_REQUEST),
       details:
         err.details &&
         err.details.map((err) => {

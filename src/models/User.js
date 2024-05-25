@@ -17,6 +17,10 @@ const User = connection.define(
       type: Sequelize.STRING,
       allowNull: true
     },
+    company: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     password: {
       type: Sequelize.STRING,
       allowNull: false
