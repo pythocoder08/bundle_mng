@@ -7,6 +7,7 @@ import HttpStatus from 'http-status-codes'
  * @returns {Object}
  */
 function buildError(err) {
+  console.error(`######## ERR ######## \n${err}`)
   // Validation errors
   if (err.isJoi) {
     return {
