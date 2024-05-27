@@ -2,12 +2,15 @@ import express from 'express'
 
 import auth from '../middlewares/auth'
 
-import { fetchStoredProc, fetchVendorCompanyLinks } from '../controllers/vendors'
-import { checkVenderPermission } from '../validators/vendorValidator'
+import { fetchStoredCol, fetchStoredProc, fetchVendorCompanyLinks, fetchVendors } from '../controllers/vendors'
+
+import { ADMIN } from '../config/constants'
 
 const router = express.Router()
 
-router.get('/companylinks', auth(), checkVenderPermission, fetchVendorCompanyLinks)
-router.get('/chart/a1/:company', auth(), checkVenderPermission, fetchStoredProc)
+router.get('/', auth(ADMIN), fetchVendors)
+router.get('/companylinks', auth(ADMIN), fetchVendorCompanyLinks)
+router.get('/chart/a1/:vendor_ID/:company_ID', auth(ADMIN), fetchStoredProc)
+router.get('/chart/a2/:vendor_ID', auth(ADMIN), fetchStoredCol)
 
 export default router
