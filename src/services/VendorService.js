@@ -90,7 +90,7 @@ export default class VendorService {
    *
    * @param   {String}  vendor_ID
    * @param   {String}  company_ID
-   * @returns {Promise<Vendor|null>}
+   * @returns {Promise<result|null>}
    */
   static async fetchStoredProc(vendor_ID, company_ID) {
     try {
@@ -104,7 +104,6 @@ export default class VendorService {
 
       return result
     } catch (error) {
-      console.error('Error executing stored procedure:', error)
       throw error
     }
   }
@@ -116,6 +115,48 @@ export default class VendorService {
    * @returns {Promise<Vendor|null>}
    */
   static async fetchStoredCol(vendor_ID) {
+    try {
+      const result = await connection.query('EXEC dbo.Deets_RPT_Vendor_Bundle_Price_Margin @VendorID = :vendor_ID', {
+        replacements: { vendor_ID },
+        type: Sequelize.QueryTypes.SELECT
+      })
+
+      return result
+    } catch (error) {
+      throw error
+    }
+  }
+
+  /**
+   * Get a vendors clinet pi by vendor.
+   *
+   * @param   {String}  vendor_ID
+   * @param   {String}  company_ID
+   * @returns {Promise<result|null>}
+   */
+  static async fetchCientPiChart(vendor_ID, company_ID) {
+    try {
+      const result = await connection.query(
+        'EXEC dbo.Deets_Customer_Concentration_Chart @VendorID = :vendor_ID, @CompanyID = :company_ID',
+        {
+          replacements: { vendor_ID, company_ID },
+          type: Sequelize.QueryTypes.SELECT
+        }
+      )
+
+      return result
+    } catch (error) {
+      throw error
+    }
+  }
+
+  /**
+   * Get a vendors clinet bar by vendor.
+   *
+   * @param   {String}  vendor_ID
+   * @returns {Promise<result|null>}
+   */
+  static async fetchCientBarChart(vendor_ID) {
     try {
       const result = await connection.query('EXEC dbo.Deets_RPT_Vendor_Bundle_Price_Margin @VendorID = :vendor_ID', {
         replacements: { vendor_ID },

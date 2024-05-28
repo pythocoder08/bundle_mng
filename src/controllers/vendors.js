@@ -1,3 +1,4 @@
+import BundleService from '../services/BundleService'
 import VendorService from '../services/VendorService'
 
 /**
@@ -62,6 +63,40 @@ export const fetchStoredProc = async (req, res, next) => {
 export const fetchStoredCol = async (req, res, next) => {
   try {
     const chart = await VendorService.fetchStoredCol(req.params.vendor_ID)
+
+    res.json({ chart })
+  } catch (err) {
+    next(err)
+  }
+}
+
+/**
+ * Fetch c1 chart data.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export const fetchCientPiChart = async (req, res, next) => {
+  try {
+    const chart = await BundleService.fetchBundleHoursByCtg(req.query)
+
+    res.json({ chart })
+  } catch (err) {
+    next(err)
+  }
+}
+
+/**
+ * Fetch c2 chart data.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export const fetchCientBarChart = async (req, res, next) => {
+  try {
+    const chart = await await BundleService.fetchBundleDeliveryCoats(req.query)
 
     res.json({ chart })
   } catch (err) {

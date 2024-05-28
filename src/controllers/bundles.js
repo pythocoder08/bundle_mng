@@ -154,3 +154,20 @@ export const copyBundle = async (req, res, next) => {
     next(err)
   }
 }
+
+/**
+ * fetch bundle P and L.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export const fetchBundlePL = async (req, res, next) => {
+  try {
+    const bundle = await BundleService.fetchBundlePL(req.query)
+
+    res.json({ bundle })
+  } catch (err) {
+    next(err)
+  }
+}

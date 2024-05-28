@@ -258,4 +258,91 @@ export default class BundleService {
       throw err
     }
   }
+
+  /**
+   * fetch bundle P and L.
+   *
+   * @param   {Object}  data
+   * @returns {Promise<result|null>}
+   */
+  static async fetchBundlePL(data) {
+    try {
+      const { vendor_ID, company_ID, bundle_ID } = data
+
+      const result = await connection.query(
+        `
+          EXEC dbo.Deets_RPT_Bundle_ProfitLoss
+            @VendorID = :vendor_ID,
+            @CompanyID = :company_ID,
+            @BundleID = :bundle_ID;
+        `,
+        {
+          replacements: { vendor_ID, company_ID, bundle_ID },
+          type: Sequelize.QueryTypes.SELECT
+        }
+      )
+
+      return result
+    } catch (err) {
+      throw err
+    }
+  }
+
+  /**
+   * fetch bundle delivery coasts.
+   *
+   * @param   {Object}  data
+   * @returns {Promise<result|null>}
+   */
+  static async fetchBundleDeliveryCoats(data) {
+    try {
+      const { vendor_ID, company_ID, bundle_ID } = data
+
+      const result = await connection.query(
+        `
+          EXEC dbo.Deets_RPT_Bundle_TotalCost
+            @VendorID = :vendor_ID,
+            @CompanyID = :company_ID,
+            @BundleID = :bundle_ID;
+        `,
+        {
+          replacements: { vendor_ID, company_ID, bundle_ID },
+          type: Sequelize.QueryTypes.SELECT
+        }
+      )
+
+      return result
+    } catch (err) {
+      throw err
+    }
+  }
+
+  /**
+   * fetch bundle hours by ctg.
+   *
+   * @param   {Object}  data
+   * @returns {Promise<result|null>}
+   */
+  static async fetchBundleHoursByCtg(data) {
+    try {
+      const { vendor_ID, company_ID, bundle_ID } = data
+
+      const result = await connection.query(
+        `
+          EXEC dbo.Deets_Chart_Bundle_Hours
+            @VendorID = :vendor_ID,
+            @CompanyID = :company_ID,
+            @BundleID = :bundle_ID;
+        `,
+        {
+          replacements: { vendor_ID, company_ID, bundle_ID },
+          type: Sequelize.QueryTypes.SELECT
+        }
+      )
+
+      return result
+    } catch (err) {
+      throw err
+    }
+  }
 }

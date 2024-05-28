@@ -9,6 +9,7 @@ import {
   copyBundle,
   eidtBundle,
   fetchBundleComponents,
+  fetchBundlePL,
   fetchBundleofferings,
   fetchBundles,
   fetchLatestBundle
@@ -25,6 +26,8 @@ router.get('/latest', auth(), fetchLatestBundle)
 router.get('/offerings', auth(ADMIN), fetchBundleofferings)
 
 router.get('/components', auth(ADMIN), fetchBundleComponents)
+
+router.get('/pl', auth(), fetchBundlePL)
 
 router.post('/', auth(ADMIN), bundleValidator, buildNewBundle)
 
