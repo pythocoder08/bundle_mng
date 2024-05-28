@@ -121,7 +121,16 @@ export const eidtBundle = async (req, res, next) => {
     const { bundle_ID } = req.params
     const { bundleName, bundleDesc, selectedOfferingIds } = req.body
 
+    const rawBundle = await BundleService.fetchBundle({ bundle_ID })
+
     const bundle = await BundleService.editBundle({ bundle_ID, bundleName, bundleDesc })
+
+    await BundleService.saveBundleOfferings({
+      vendor_ID: rawBundle.vendor_ID,
+      company_ID: rawBundle.vendor_ID,
+      bundle_ID,
+      selectedOfferingIds
+    })
 
     res.json({ bundle })
   } catch (err) {

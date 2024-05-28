@@ -5,7 +5,23 @@ import Bundle from '../models/Bundle'
 
 export default class BundleService {
   /**
-   * Get a bundles.
+   * Get a bundle.
+   *
+   * @param   {Object}  query
+   * @returns {Promise<Bundle|null>}
+   */
+  static async fetchBundle(query = {}) {
+    try {
+      const bundles = await Bundle.findOne({ where: { ...query } })
+
+      return bundles
+    } catch (err) {
+      throw err
+    }
+  }
+
+  /**
+   * Get bundles.
    *
    * @param   {Object}  query
    * @returns {Promise<Bundle|null>}
