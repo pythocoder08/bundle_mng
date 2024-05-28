@@ -4,11 +4,11 @@ import validate from '../utils/validate'
 
 // Validation schema
 const schema = Joi.object({
-  vendor_ID: Joi.number().label('vendor_ID').required(),
-  company_ID: Joi.number().label('company_ID').required(),
-  bundleDesc: Joi.string().label('bundleDesc').required(),
-  bundleName: Joi.string().label('bundleName').required(),
-  selectedOfferingIds: Joi.string().label('selectedOfferingIds').required()
+  vendor_ID: Joi.number().label('Vendor').required(),
+  company_ID: Joi.number().label('Company').required(),
+  bundleDesc: Joi.string().label('Description').required(),
+  bundleName: Joi.string().label('Bundle name').required(),
+  selectedOfferingIds: Joi.string().label('Offrings').required()
 })
 
 /**
