@@ -1,9 +1,25 @@
-import Sequelize from 'sequelize'
+import Sequelize, { where } from 'sequelize'
 
 import connection from '../database/conn'
 import Bundle from '../models/Bundle'
 
 export default class BundleService {
+  /**
+   * Get a bundles.
+   *
+   * @param   {Object}  query
+   * @returns {Promise<Bundle|null>}
+   */
+  static async fetchBundles(query = {}) {
+    try {
+      const bundles = await Bundle.findAll({ where: { ...query } })
+
+      return bundles
+    } catch (err) {
+      throw err
+    }
+  }
+
   /**
    * Get a bundle offerings.
    *
@@ -142,6 +158,24 @@ export default class BundleService {
       )
 
       return offerings
+    } catch (err) {
+      throw err
+    }
+  }
+
+  /**
+   * Edit bundle.
+   *
+   * @param   {Object}  data
+   * @returns {Promise<offerings|null>}
+   */
+  static async editBundle(data) {
+    try {
+      const { bundle_ID, bundleName, bundleDesc } = data
+
+      const bundle = await Bundle.update({ bundle_name: bundleName, bundle_desc: bundleDesc }, { where: { bundle_ID } })
+
+      return bundle
     } catch (err) {
       throw err
     }

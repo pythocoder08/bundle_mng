@@ -3,6 +3,23 @@ import BundleService from '../services/BundleService'
 import VendorService from '../services/VendorService'
 
 /**
+ * Fetch bundles.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export const fetchBundles = async (_, res, next) => {
+  try {
+    const bundles = await BundleService.fetchBundles()
+
+    res.json({ bundles })
+  } catch (err) {
+    next(err)
+  }
+}
+
+/**
  * Fetch bundle offerings.
  *
  * @param {Object} req
@@ -87,6 +104,26 @@ export const buildNewBundle = async (req, res, next) => {
     await BundleService.saveBundleOfferings({ vendor_ID, company_ID, bundle_ID, selectedOfferingIds })
 
     res.json({ bundle: { message: 'success' } })
+  } catch (err) {
+    next(err)
+  }
+}
+
+/**
+ * Build a new bundle.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export const eidtBundle = async (req, res, next) => {
+  try {
+    const { bundle_ID } = req.params
+    const { bundleName, bundleDesc, selectedOfferingIds } = req.body
+
+    const bundle = await BundleService.editBundle({ bundle_ID, bundleName, bundleDesc })
+
+    res.json({ bundle })
   } catch (err) {
     next(err)
   }
