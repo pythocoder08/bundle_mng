@@ -2,6 +2,9 @@ import Sequelize, { where } from 'sequelize'
 
 import connection from '../database/conn'
 import Bundle from '../models/Bundle'
+import Boom from '@hapi/boom'
+import Catalog from '../models/Catalog'
+import VendorService from './VendorService'
 
 export default class BundleService {
   /**
@@ -192,6 +195,65 @@ export default class BundleService {
       const bundle = await Bundle.update({ bundle_name: bundleName, bundle_desc: bundleDesc }, { where: { bundle_ID } })
 
       return bundle
+    } catch (err) {
+      throw err
+    }
+  }
+
+  /**
+   * Copy bundle.
+   *
+   * @param   {Object}  data
+   * @returns {Promise<offerings|null>}
+   */
+  static async copyBundle(data) {
+    try {
+      const { bundle_ID, vendor_ID, customerName } = data
+
+      const currentDate = new Date().toISOString()
+
+      const existingCompany = await Catalog.findOne({
+        where: { company: customerName }
+      })
+
+      if (existingCompany) throw Boom.badRequest('Customer already exists')
+
+      const maxLogIdResult = await Catalog.max('catalogID')
+      const newCompanyId = maxLogIdResult + 1
+
+      await Catalog.create({
+        company: customerName,
+        catalogID: newCompanyId,
+        catalog: 'D' + newCompanyId.toString().trim(),
+        catalog_dateAdded: currentDate
+      })
+
+      const bundle = await this.fetchBundle({ bundle_ID })
+      if (!bundle) Boom.notFound('Bundle not found')
+
+      const vendor = await VendorService.fetchVendor({ vendor_ID })
+      if (!vendor) throw Boom.notFound('Vendor not found')
+
+      const bundleCom = await connection.query(
+        `
+            EXEC dbo.Deets_Copy_Bundle
+              @VendorID = :vendor_ID,
+              @CompanyID = :company_ID,
+              @BundleID = :bundle_ID,
+              @NewCustomerName = :customerName;
+          `,
+        {
+          replacements: {
+            vendor_ID,
+            company_ID: newCompanyId,
+            bundle_ID,
+            customerName
+          },
+          type: Sequelize.QueryTypes.SELECT
+        }
+      )
+
+      return bundleCom
     } catch (err) {
       throw err
     }

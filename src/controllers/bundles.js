@@ -137,3 +137,20 @@ export const eidtBundle = async (req, res, next) => {
     next(err)
   }
 }
+
+/**
+ * Copy bundle.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export const copyBundle = async (req, res, next) => {
+  try {
+    const bundle = await BundleService.copyBundle(req.body)
+
+    res.json({ bundle })
+  } catch (err) {
+    next(err)
+  }
+}
