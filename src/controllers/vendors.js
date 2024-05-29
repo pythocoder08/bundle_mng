@@ -25,10 +25,11 @@ export const fetchVendors = async (_, res, next) => {
  * @param {Object} res
  * @param {Function} next
  */
-export const fetchVendorCompanyLinks = async (req, res, next) => {
+export const fetchVendorCompanyList = async (req, res, next) => {
   try {
-    const vendor = await VendorService.fetchVendorByUser(req.user.company)
-    const companyLinks = await VendorService.fetchVendorCompanyLinks(vendor.vendor_ID)
+    const vendor = await VendorService.fetchVendorByCompany(req.user.company)
+    console.log(vendor);
+    const companyLinks = await VendorService.fetchVendorCompanyList(vendor.vendor_ID)
 
     res.json({ companyLinks })
   } catch (err) {
@@ -45,9 +46,14 @@ export const fetchVendorCompanyLinks = async (req, res, next) => {
  */
 export const getRevenueSummary = async (req, res, next) => {
   try {
-    const chart = await VendorService.getRevenueSummary(req.query.vendor_ID, req.query.company_ID)
+    const { userID, company } = req.user;
 
-    res.json({ chart })
+    const catalog = await VendorService.findCatalog(company);
+    const vendor = await VendorService.fetchVendorByCompany(company);
+
+    const result = await VendorService.getRevenueSummary(vendor.vendor_ID, catalog.catalogID)
+
+    res.json({ result })
   } catch (err) {
     next(err)
   }
@@ -62,9 +68,11 @@ export const getRevenueSummary = async (req, res, next) => {
  */
 export const getMarginSummary = async (req, res, next) => {
   try {
-    const chart = await VendorService.getMarginSummary(req.query.vendor_ID)
+    const { userID, company } = req.user;
+    const vendor = await VendorService.fetchVendorByCompany(company);
+    const result = await VendorService.getMarginSummary(vendor.vendor_ID)
 
-    res.json({ chart })
+    res.json({ result })
   } catch (err) {
     next(err)
   }

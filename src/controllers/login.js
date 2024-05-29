@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import config from '../config/config'
 import passwordUtil from '../utils/password'
 import UserService from '../services/UserService'
+import VendorService from '../services/VendorService'
 
 /**
  * Login
@@ -14,13 +15,14 @@ import UserService from '../services/UserService'
  */
 export const login = async (req, res, next) => {
   try {
-    const { email, password } = req.body
+    const { userID, password } = req.body
 
-    const user = await UserService.fetchUserByEmail(email)
+    const user = await UserService.fetchUserByUserID(userID)
 
-    if (!passwordUtil.comparePassword(password, user.password)) throw Boom.badRequest('Password incorrect')
+    if (!passwordUtil.comparePassword(password, user.password)) 
+      throw Boom.badRequest('Password incorrect')
 
-    const token = jwt.sign({ user: { email: user.email } }, config.SECRET, {
+    const token = jwt.sign({ user: { userID: user.userID } }, config.SECRET, {
       expiresIn: config.expiresIn
     })
 

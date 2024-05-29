@@ -48,7 +48,7 @@ export default class BundleService {
    * @param   {String}  componentType
    * @returns {Promise<offerings|null>}
    */
-  static async fetchBundleofferings({ vendor_ID, company_ID, bundle_ID, componentType }) {
+  static async fetchBundleofferings(vendor_ID, company_ID, bundle_ID, componentType) {
     try {
       const offerings = await connection.query(
         `
@@ -79,7 +79,7 @@ export default class BundleService {
    * @param   {String}  componentType
    * @returns {Promise<offerings|null>}
    */
-  static async fetchBundleComponents({ vendor_ID, company_ID, bundle_ID, componentType }) {
+  static async run_Deets_Get_Components(vendor_ID, company_ID, bundle_ID, componentType) {
     try {
       const offerings = await connection.query(
         `
@@ -127,7 +127,7 @@ export default class BundleService {
    * @param   {Object}  data
    * @returns {Promise<Bundle|null>}
    */
-  static async buildNewBundle(data) {
+  static async run_Deets_Save_New_Bundle(data) {
     try {
       const { vendor_ID, company_ID, bundle_ID, bundleName, bundleDesc } = data
 
@@ -158,7 +158,7 @@ export default class BundleService {
    * @param   {Object}  data
    * @returns {Promise<offerings|null>}
    */
-  static async saveBundleOfferings(data) {
+  static async run_Deets_Save_Bundle_Offerings(data) {
     try {
       const { vendor_ID, company_ID, bundle_ID, selectedOfferingIds } = data
 
@@ -188,7 +188,7 @@ export default class BundleService {
    * @param   {Object}  data
    * @returns {Promise<offerings|null>}
    */
-  static async editBundle(data) {
+  static async updateBundle(data) {
     try {
       const { bundle_ID, bundleName, bundleDesc } = data
 

@@ -9,7 +9,6 @@ const router = Router()
 
 router.use('/auth', authRouter)
 router.use('/vendors', vendorRouter)
-router.use('/vendors', vendorRouter)
 router.use('/bundles', bundleRouter)
 router.use('/tooltips', tooltipRouter)
 

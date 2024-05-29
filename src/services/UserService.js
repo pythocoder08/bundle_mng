@@ -9,14 +9,9 @@ export default class UserService {
    * @param   {String}  flag
    * @returns {Promise<User|null>}
    */
-  static async fetchUserByEmail(flag) {
+  static async fetchUserByUserID(userID) {
     try {
-      const user = await User.findOne({
-        where: {
-          [Op.or]: [{ Email: flag }, { UserID: flag }]
-        },
-        raw: true
-      })
+      const user = await User.findOne({where: { UserID: userID }})
 
       if (!user) throw Boom.notFound('User not found')
 

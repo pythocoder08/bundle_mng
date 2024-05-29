@@ -20,10 +20,10 @@ const auth =
       if (!token) throw Boom.unauthorized('Empty tocken')
 
       const {
-        user: { email }
+        user: { userID }
       } = jwt.verify(token, config.SECRET)
 
-      const user = await UserService.fetchUserByEmail(email)
+      const user = await UserService.fetchUserByUserID(userID)
 
       if (role === ADMIN) if (user.vendor !== 'Yes') throw Boom.forbidden('Permission denied')
 

@@ -4,8 +4,18 @@ import Sequelize from 'sequelize'
 import connection from '../database/conn'
 import Vendor from '../models/Vendor'
 import VendorCompany from '../models/VendorCompany'
+import CompanyProfile from '../models/CompanyProfile'
+import Catalog from '../models/Catalog'
 
 export default class VendorService {
+
+  static async findCatalog(company) {
+    const catalog = await Catalog.findOne({
+      where: { company: company }
+    })
+
+    return catalog;
+  }
   /**
    * Get a vendors.
    *
@@ -44,7 +54,7 @@ export default class VendorService {
    * @param   {String}  company
    * @returns {Promise<Vendor|null>}
    */
-  static async fetchVendorByUser(company) {
+  static async fetchVendorByCompany(company) {
     try {
       const vendorCom = await VendorCompany.findOne({
         where: {
@@ -71,7 +81,7 @@ export default class VendorService {
    * @param   {String}  vendor_ID
    * @returns {Promise<Vendor|null>}
    */
-  static async fetchVendorCompanyLinks(vendor_ID) {
+  static async fetchVendorCompanyList(vendor_ID) {
     try {
       const vendorComs = await VendorCompany.findAll({
         where: {

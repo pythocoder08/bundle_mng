@@ -4,7 +4,7 @@ import validate from '../utils/validate'
 
 // Validation schema
 const schema = Joi.object({
-  email: Joi.string().label('email').email().max(90).required(),
+  userID: Joi.string().label('userID').max(90).required(),
   password: Joi.string().label('password').max(90).required()
 })
 

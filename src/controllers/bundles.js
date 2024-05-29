@@ -28,11 +28,18 @@ export const fetchBundles = async (_, res, next) => {
  */
 export const fetchBundleofferings = async (req, res, next) => {
   try {
-    const vendor = VendorService.fetchVendor({ vendor_ID: req.query.vendor_ID })
 
-    if (!vendor) throw Boom.notFound('The vendor is not exist')
+    const { userID, company } = req.user;
+    const vendor = await VendorService.fetchVendorByCompany(company);
 
-    const offerings = await BundleService.fetchBundleofferings(req.query)
+    if (!vendor) 
+      throw Boom.notFound('The vendor does not exist.')
+
+    const catalog = await VendorService.findCatalog(company);
+    if(!catalog)
+      throw Boom.notFound('The catalog does not exist.')
+
+    const offerings = await BundleService.fetchBundleofferings(vendor.vendor_ID, catalog.catalogID, req.query.bundle_ID, req.query.componentType)
 
     res.json({ offerings })
   } catch (err) {
@@ -49,13 +56,18 @@ export const fetchBundleofferings = async (req, res, next) => {
  */
 export const fetchBundleComponents = async (req, res, next) => {
   try {
-    const vendor = VendorService.fetchVendor({ vendor_ID: req.query.vendor_ID })
+    const { userID, company } = req.user;
+    const vendor = await VendorService.fetchVendorByCompany(company);
 
-    if (!vendor) throw Boom.notFound('The vendor is not exist')
+    if (!vendor) 
+      throw Boom.notFound('The vendor does not exist.')
 
-    const bundle = await BundleService.fetchLatestBundle()
+    const catalog = await VendorService.findCatalog(company);
+    if(!catalog)
+      throw Boom.notFound('The catalog does not exist.')
 
-    const components = await BundleService.fetchBundleComponents({ ...req.query, bundle_ID: +bundle.bundle_ID + 1 })
+    console.log("--------", vendor.vendor_ID, catalog.catalogID, 0, req.query.componentType)
+    const components = await BundleService.run_Deets_Get_Components(vendor.vendor_ID, catalog.catalogID, 0, req.query.componentType)
 
     res.json({ components })
   } catch (err) {
@@ -87,7 +99,7 @@ export const fetchLatestBundle = async (req, res, next) => {
  * @param {Object} res
  * @param {Function} next
  */
-export const buildNewBundle = async (req, res, next) => {
+export const createBundle = async (req, res, next) => {
   try {
     const { vendor_ID, company_ID, bundleName, bundleDesc, selectedOfferingIds } = req.body
 
@@ -97,11 +109,11 @@ export const buildNewBundle = async (req, res, next) => {
 
     const vendor = VendorService.fetchVendor({ vendor_ID })
 
-    if (!vendor) throw Boom.notFound('The vendor is not exist')
+    if (!vendor) throw Boom.notFound('The vendor does not exist.')
 
-    await BundleService.buildNewBundle({ vendor_ID, company_ID, bundle_ID, bundleName, bundleDesc })
+    await BundleService.run_Deets_Save_New_Bundle({ vendor_ID, company_ID, bundle_ID, bundleName, bundleDesc })
 
-    await BundleService.saveBundleOfferings({ vendor_ID, company_ID, bundle_ID, selectedOfferingIds })
+    await BundleService.run_Deets_Save_Bundle_Offerings({ vendor_ID, company_ID, bundle_ID, selectedOfferingIds })
 
     res.json({ bundle: { message: 'success' } })
   } catch (err) {
@@ -116,14 +128,14 @@ export const buildNewBundle = async (req, res, next) => {
  * @param {Object} res
  * @param {Function} next
  */
-export const editBundle = async (req, res, next) => {
+export const updateBundle = async (req, res, next) => {
   try {
     const { bundle_ID } = req.params
     const { bundleName, bundleDesc, selectedOfferingIds } = req.body
 
     const rawBundle = await BundleService.fetchBundle({ bundle_ID })
 
-    const bundle = await BundleService.editBundle({ bundle_ID, bundleName, bundleDesc })
+    const bundle = await BundleService.updateBundle({ bundle_ID, bundleName, bundleDesc })
 
     await BundleService.saveBundleOfferings({
       vendor_ID: rawBundle.vendor_ID,
