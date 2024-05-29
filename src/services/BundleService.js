@@ -127,17 +127,12 @@ export default class BundleService {
    */
   static async fetchLatestBundleId() {
     try {
-      const bundle = await connection.query(
-        `SELECT MAX([log_ID]) LastID FROM [tblBundles]`,
-        {
-          type: Sequelize.QueryTypes.SELECT
-        }
-      )
+      const bundle = await connection.query(`SELECT MAX([log_ID]) LastID FROM [tblBundles]`, {
+        type: Sequelize.QueryTypes.SELECT
+      })
 
-      if(bundle && bundle.length > 0)
-        return bundle[0].LastID;
-      else
-        return 0
+      if (bundle && bundle.length > 0) return bundle[0].LastID
+      else return 0
     } catch (err) {
       throw err
     }
@@ -236,13 +231,13 @@ export default class BundleService {
 
       if (existingCompany) throw Boom.badRequest('Customer already exists')
 
-      const maxLogIdResult = await Catalog.max('catalogID')
-      const newCompanyId = maxLogIdResult + 1
+      const maxLogId = await Catalog.max('catalogID')
+      const company_ID = maxLogId + 1
 
       await Catalog.create({
         company: customerName,
-        catalogID: newCompanyId,
-        catalog: 'D' + newCompanyId.toString().trim(),
+        catalogID: company_ID,
+        catalog: 'D' + company_ID.toString().trim(),
         catalog_dateAdded: currentDate
       })
 
@@ -254,16 +249,16 @@ export default class BundleService {
 
       const bundleCom = await connection.query(
         `
-            EXEC dbo.Deets_Copy_Bundle
-              @VendorID = :vendor_ID,
-              @CompanyID = :company_ID,
-              @BundleID = :bundle_ID,
-              @NewCustomerName = :customerName;
-          `,
+          EXEC dbo.Deets_COPY_Bundle
+            @VendorID = :vendor_ID,
+            @CompanyID = :company_ID,
+            @BundleID = :bundle_ID,
+            @NewCustomerName = :customerName;
+        `,
         {
           replacements: {
             vendor_ID,
-            company_ID: newCompanyId,
+            company_ID,
             bundle_ID,
             customerName
           },
