@@ -70,6 +70,25 @@ export default class BundleService {
     }
   }
 
+  static async createBundlePricing(vendor_id, company_id, bundle_id, component_id) {
+    try {
+      const result = await connection.query(
+        `
+        INSERT INTO tblBundles_Pricing (Vendor_ID,Company_ID, Bundle_ID, Bundle_Component_ID)
+        VALUES (:vendor_id, :company_id, :bundle_id, :component_id)
+        `,
+        {
+          replacements: { vendor_id, company_id, bundle_id, component_id },
+          type: Sequelize.QueryTypes.INSERT
+        }
+      )
+
+      return result
+    } catch (error) {
+      throw error
+    }
+  }
+
   /**
    * Get a bundle componens.
    *
@@ -106,16 +125,19 @@ export default class BundleService {
    *
    * @returns {Promise<Bundle|null>}
    */
-  static async fetchLatestBundle() {
+  static async fetchLatestBundleId() {
     try {
-      const bundle = await Bundle.findOne({
-        order: [
-          ['bundle_ID', 'DESC'] // Use 'ASC' for ascending
-        ],
-        raw: true
-      })
+      const bundle = await connection.query(
+        `SELECT MAX([log_ID]) LastID FROM [tblBundles]`,
+        {
+          type: Sequelize.QueryTypes.SELECT
+        }
+      )
 
-      return bundle
+      if(bundle && bundle.length > 0)
+        return bundle[0].LastID;
+      else
+        return 0
     } catch (err) {
       throw err
     }
@@ -127,10 +149,8 @@ export default class BundleService {
    * @param   {Object}  data
    * @returns {Promise<Bundle|null>}
    */
-  static async run_Deets_Save_New_Bundle(data) {
+  static async run_Deets_Save_New_Bundle(vendor_ID, company_ID, bundle_ID, bundleName, bundleDesc) {
     try {
-      const { vendor_ID, company_ID, bundle_ID, bundleName, bundleDesc } = data
-
       const bundle = await connection.query(
         `
               EXEC dbo.Deets_Save_New_Bundle
@@ -158,10 +178,8 @@ export default class BundleService {
    * @param   {Object}  data
    * @returns {Promise<offerings|null>}
    */
-  static async run_Deets_Save_Bundle_Offerings(data) {
+  static async run_Deets_Save_Bundle_Offerings(vendor_ID, company_ID, bundle_ID, selectedOfferingIds) {
     try {
-      const { vendor_ID, company_ID, bundle_ID, selectedOfferingIds } = data
-
       const offerings = await connection.query(
         `
               EXEC dbo.Deets_Save_Bundle_Offerings

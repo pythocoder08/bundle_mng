@@ -12,7 +12,7 @@ import {
   fetchBundlePL,
   fetchBundleofferings,
   fetchBundles,
-  fetchLatestBundle
+  fetchLatestBundleId
 } from '../controllers/bundles'
 
 import { bundleValidator } from '../validators/bundleValidator'
@@ -21,7 +21,7 @@ const router = express.Router()
 
 router.get('/fetch-bundles', auth(), fetchBundles)
 
-router.get('/latest', auth(), fetchLatestBundle)
+router.get('/get-last-bundle-id', auth(), fetchLatestBundleId)
 
 router.get('/offerings', auth(ADMIN), fetchBundleofferings)
 

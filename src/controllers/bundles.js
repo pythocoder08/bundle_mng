@@ -66,7 +66,6 @@ export const fetchBundleComponents = async (req, res, next) => {
     if(!catalog)
       throw Boom.notFound('The catalog does not exist.')
 
-    console.log("--------", vendor.vendor_ID, catalog.catalogID, 0, req.query.componentType)
     const components = await BundleService.run_Deets_Get_Components(vendor.vendor_ID, catalog.catalogID, 0, req.query.componentType)
 
     res.json({ components })
@@ -82,11 +81,10 @@ export const fetchBundleComponents = async (req, res, next) => {
  * @param {Object} res
  * @param {Function} next
  */
-export const fetchLatestBundle = async (req, res, next) => {
+export const fetchLatestBundleId = async (req, res, next) => {
   try {
-    const bundle = await BundleService.fetchLatestBundle()
-
-    res.json({ bundle })
+    const LastID = await BundleService.fetchLatestBundleId()
+    res.json({ LastID })
   } catch (err) {
     next(err)
   }
@@ -101,19 +99,28 @@ export const fetchLatestBundle = async (req, res, next) => {
  */
 export const createBundle = async (req, res, next) => {
   try {
-    const { vendor_ID, company_ID, bundleName, bundleDesc, selectedOfferingIds } = req.body
+    const { company_ID, bundleName, bundleDesc, selectedOfferingIds, componentIds } = req.body
 
-    const latestBundle = await BundleService.fetchLatestBundle()
+    const { userID, company } = req.user;
+    const vendor = await VendorService.fetchVendorByCompany(company);
 
-    const bundle_ID = +latestBundle.bundle_ID + 1
+    if (!vendor) 
+      throw Boom.notFound('The vendor does not exist.')
 
-    const vendor = VendorService.fetchVendor({ vendor_ID })
+    const catalog = await VendorService.findCatalog(company_ID);
+    if(!catalog)
+      throw Boom.notFound('The catalog does not exist.')
 
-    if (!vendor) throw Boom.notFound('The vendor does not exist.')
+    const latestBundleId = await BundleService.fetchLatestBundleId()
+    const bundle_ID = +latestBundleId + 1
 
-    await BundleService.run_Deets_Save_New_Bundle({ vendor_ID, company_ID, bundle_ID, bundleName, bundleDesc })
+    for(let cid of componentIds) {
+      console.log("component_id = ", cid)
+      await BundleService.createBundlePricing(vendor.vendor_ID, catalog.catalogID, bundle_ID, cid)
+    }
 
-    await BundleService.run_Deets_Save_Bundle_Offerings({ vendor_ID, company_ID, bundle_ID, selectedOfferingIds })
+    await BundleService.run_Deets_Save_New_Bundle(vendor.vendor_ID, catalog.catalogID, bundle_ID, bundleName, bundleDesc)
+    await BundleService.run_Deets_Save_Bundle_Offerings(vendor.vendor_ID, catalog.catalogID, bundle_ID, selectedOfferingIds)
 
     res.json({ bundle: { message: 'success' } })
   } catch (err) {
