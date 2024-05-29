@@ -15,7 +15,7 @@ import {
   fetchLatestBundleId
 } from '../controllers/bundles'
 
-import { bundleValidator } from '../validators/bundleValidator'
+import { bundleValidator, copyBundleValidator } from '../validators/bundleValidator'
 
 const router = express.Router()
 
@@ -31,7 +31,7 @@ router.get('/profit-and-loss', auth(), fetchBundlePL)
 
 router.post('/create-bundle', auth(ADMIN), bundleValidator, createBundle)
 
-router.post('/copy', auth(ADMIN), copyBundle)
+router.post('/copy', auth(ADMIN), copyBundleValidator, copyBundle)
 
 router.put('/:bundle_ID', auth(ADMIN), updateBundle)
 
