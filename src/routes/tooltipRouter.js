@@ -6,6 +6,6 @@ import { fetchTooltip } from '../controllers/tooltips'
 
 const router = express.Router()
 
-router.get('/:description', auth(), fetchTooltip)
+router.get('/get-tooltip', auth(), fetchTooltip)
 
 export default router
