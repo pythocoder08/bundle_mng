@@ -27,7 +27,7 @@ router.get('/offerings', auth(ADMIN), fetchBundleofferings)
 
 router.get('/components', auth(ADMIN), fetchBundleComponents)
 
-router.get('/pl', auth(), fetchBundlePL)
+router.get('/profit-and-loss', auth(), fetchBundlePL)
 
 router.post('/', auth(ADMIN), bundleValidator, buildNewBundle)
 
