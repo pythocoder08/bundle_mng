@@ -43,9 +43,9 @@ export const fetchVendorCompanyLinks = async (req, res, next) => {
  * @param {Object} res
  * @param {Function} next
  */
-export const fetchStoredProc = async (req, res, next) => {
+export const getRevenueSummary = async (req, res, next) => {
   try {
-    const chart = await VendorService.fetchStoredProc(req.params.vendor_ID, req.params.company_ID)
+    const chart = await VendorService.getRevenueSummary(req.query.vendor_ID, req.query.company_ID)
 
     res.json({ chart })
   } catch (err) {
@@ -60,9 +60,9 @@ export const fetchStoredProc = async (req, res, next) => {
  * @param {Object} res
  * @param {Function} next
  */
-export const fetchStoredCol = async (req, res, next) => {
+export const getMarginSummary = async (req, res, next) => {
   try {
-    const chart = await VendorService.fetchStoredCol(req.params.vendor_ID)
+    const chart = await VendorService.getMarginSummary(req.query.vendor_ID)
 
     res.json({ chart })
   } catch (err) {
@@ -77,7 +77,7 @@ export const fetchStoredCol = async (req, res, next) => {
  * @param {Object} res
  * @param {Function} next
  */
-export const fetchCientPiChart = async (req, res, next) => {
+export const getDeliveryHours = async (req, res, next) => {
   try {
     const chart = await BundleService.fetchBundleHoursByCtg(req.query)
 
@@ -94,7 +94,7 @@ export const fetchCientPiChart = async (req, res, next) => {
  * @param {Object} res
  * @param {Function} next
  */
-export const fetchCientBarChart = async (req, res, next) => {
+export const getDeliveryCosts = async (req, res, next) => {
   try {
     const chart = await await BundleService.fetchBundleDeliveryCoats(req.query)
 

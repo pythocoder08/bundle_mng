@@ -7,7 +7,7 @@ import auth from '../middlewares/auth'
 import {
   buildNewBundle,
   copyBundle,
-  eidtBundle,
+  editBundle,
   fetchBundleComponents,
   fetchBundlePL,
   fetchBundleofferings,
@@ -33,6 +33,6 @@ router.post('/', auth(ADMIN), bundleValidator, buildNewBundle)
 
 router.post('/copy', auth(ADMIN), copyBundle)
 
-router.put('/:bundle_ID', auth(ADMIN), eidtBundle)
+router.put('/:bundle_ID', auth(ADMIN), editBundle)
 
 export default router

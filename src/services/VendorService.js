@@ -92,7 +92,7 @@ export default class VendorService {
    * @param   {String}  company_ID
    * @returns {Promise<result|null>}
    */
-  static async fetchStoredProc(vendor_ID, company_ID) {
+  static async getRevenueSummary(vendor_ID, company_ID) {
     try {
       const result = await connection.query(
         'EXEC dbo.Deets_Customer_Concentration_Chart @VendorID = :vendor_ID, @CompanyID = :company_ID',
@@ -114,7 +114,7 @@ export default class VendorService {
    * @param   {String}  vendor_ID
    * @returns {Promise<Vendor|null>}
    */
-  static async fetchStoredCol(vendor_ID) {
+  static async getMarginSummary(vendor_ID) {
     try {
       const result = await connection.query('EXEC dbo.Deets_RPT_Vendor_Bundle_Price_Margin @VendorID = :vendor_ID', {
         replacements: { vendor_ID },
@@ -134,7 +134,7 @@ export default class VendorService {
    * @param   {String}  company_ID
    * @returns {Promise<result|null>}
    */
-  static async fetchCientPiChart(vendor_ID, company_ID) {
+  static async getDeliveryHours(vendor_ID, company_ID) {
     try {
       const result = await connection.query(
         'EXEC dbo.Deets_Customer_Concentration_Chart @VendorID = :vendor_ID, @CompanyID = :company_ID',
@@ -156,7 +156,7 @@ export default class VendorService {
    * @param   {String}  vendor_ID
    * @returns {Promise<result|null>}
    */
-  static async fetchCientBarChart(vendor_ID) {
+  static async getDeliveryCosts(vendor_ID) {
     try {
       const result = await connection.query('EXEC dbo.Deets_RPT_Vendor_Bundle_Price_Margin @VendorID = :vendor_ID', {
         replacements: { vendor_ID },

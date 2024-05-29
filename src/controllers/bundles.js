@@ -116,7 +116,7 @@ export const buildNewBundle = async (req, res, next) => {
  * @param {Object} res
  * @param {Function} next
  */
-export const eidtBundle = async (req, res, next) => {
+export const editBundle = async (req, res, next) => {
   try {
     const { bundle_ID } = req.params
     const { bundleName, bundleDesc, selectedOfferingIds } = req.body
